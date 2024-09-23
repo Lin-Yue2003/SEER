@@ -13,7 +13,7 @@ python3 main.py \
 --print_interval 30 \
 --num_epochs 100 \
 --epoch_steps 1000 \
---test_interval 10 \
+--test_interval 1 \
 --big_test_interval 100 \
 --act ReLU \
 --public_labels True \
