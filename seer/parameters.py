@@ -44,7 +44,7 @@ def get_args(argv=None):
     parser.add_argument('--sched_y_1', type=float, default=-2, help='base 2 logarithm of the ratio between negative and positive term in the objective')
     parser.add_argument('--sched_y_end', type=float, help='base 2 logarithm of the ratio between negative and positive term in the objective')
     parser.add_argument('-btr','--batch_size_train', type=str, default=8, help='Batch size for training')
-    parser.add_argument('--device', type=str, default="cuda" if torch.cuda.is_available() else "cpu", help='Torch device')
+    parser.add_argument('--device', type=str, default="cuda:1", help='Torch device')
 
     # Dataset params
     parser.add_argument('-d','--dataset', default='Cifar10')
