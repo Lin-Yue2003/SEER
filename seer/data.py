@@ -312,15 +312,15 @@ def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, 
     if prop3 != None:
         prop_num+=1
 
-    score1 = [property_scores((trainset[i][0],prop1)) for i in range(len(trainset))]
+    score1 = [property_scores((trainset[i][0],prop = prop1)) for i in range(len(trainset))]
     score1 = normalize_scores(score1)
     if prop2 is not None:
-        score2 = normalize_scores([property_scores((trainset[i][0], prop2)) for i in range(len(trainset))])
+        score2 = normalize_scores([property_scores((trainset[i][0],prop = prop2)) for i in range(len(trainset))])
     else:
         score2 = np.zeros(len(trainset)) 
     score2 = normalize_scores(score2)
     if prop3 is not None:
-        score3 = normalize_scores([property_scores((trainset[i][0], prop3)) for i in range(len(trainset))])
+        score3 = normalize_scores([property_scores((trainset[i][0],prop = prop3)) for i in range(len(trainset))])
     else:
         score3 = np.zeros(len(trainset)) 
     score3 = normalize_scores(score3)
@@ -329,15 +329,15 @@ def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, 
 
     sorted_trainset = [trainset[i] for i in sorted_indices]
 
-    score1 = [property_scores((testset[i][0],prop1)) for i in range(len(testset))]
+    score1 = [property_scores((testset[i][0],prop = prop1)) for i in range(len(testset))]
     score1 = normalize_scores(score1)
     if prop2 is not None:
-        score2 = normalize_scores([property_scores((testset[i][0], prop2)) for i in range(len(testset))])
+        score2 = normalize_scores([property_scores((testset[i][0],prop = prop2)) for i in range(len(testset))])
     else:
         score2 = np.zeros(len(testset)) 
     score2 = normalize_scores(score2)
     if prop3 is not None:
-        score3 = normalize_scores([property_scores((testset[i][0], prop3)) for i in range(len(testset))])
+        score3 = normalize_scores([property_scores((testset[i][0],prop = prop3)) for i in range(len(testset))])
     else:
         score3 = np.zeros(len(testset)) 
     score3 = normalize_scores(score3)
