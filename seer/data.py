@@ -302,11 +302,11 @@ def datasets_Cifar10():
     return trainset,testset
 def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, w2 = 0.0, prop3 = None, w3 = 0.0):
     prop_set = ['bright','dark','red','green','blue','hedge','vedge','vedge+green','red+car','rand_conv']
-    assert(w1+w2+w3 != 1), "The sum of weights is not equal 1." 
+    assert(w1+w2+w3 == 1), "The sum of weights is not equal 1." 
     prop_num = 1
-    assert(prop1 != None and prop1 not in prop_set), "prop1 is not in the property set"
-    assert(prop2 != None and prop2 not in prop_set), "prop2 is not in the property set"
-    assert(prop3 != None and prop3 not in prop_set), "prop3 is not in the property set"
+    assert(prop1 != None and prop1 in prop_set), "prop1 is not in the property set"
+    assert(prop2 != None and prop2 in prop_set), "prop2 is not in the property set"
+    assert(prop3 != None and prop3 in prop_set), "prop3 is not in the property set"
     if prop2 != None:
         prop_num+=1
     if prop3 != None:
@@ -314,9 +314,15 @@ def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, 
 
     score1 = [property_scores((trainset[i][0],prop1)) for i in range(len(trainset))]
     score1 = normalize_scores(score1)
-    score2 = [property_scores((trainset[i][0],prop2)) for i in range(len(trainset))]
+    if prop2 is not None:
+        score2 = normalize_scores([property_scores((trainset[i][0], prop2)) for i in range(len(trainset))])
+    else:
+        score2 = np.zeros(len(trainset)) 
     score2 = normalize_scores(score2)
-    score3 = [property_scores((trainset[i][0],prop3)) for i in range(len(trainset))]
+    if prop3 is not None:
+        score3 = normalize_scores([property_scores((trainset[i][0], prop3)) for i in range(len(trainset))])
+    else:
+        score3 = np.zeros(len(trainset)) 
     score3 = normalize_scores(score3)
     total_score = score1*w1+score2*w2+score3*w3 
     sorted_indices = np.argsort(total_score) 
@@ -325,9 +331,15 @@ def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, 
 
     score1 = [property_scores((testset[i][0],prop1)) for i in range(len(testset))]
     score1 = normalize_scores(score1)
-    score2 = [property_scores((testset[i][0],prop2)) for i in range(len(testset))]
+    if prop2 is not None:
+        score2 = normalize_scores([property_scores((testset[i][0], prop2)) for i in range(len(testset))])
+    else:
+        score2 = np.zeros(len(testset)) 
     score2 = normalize_scores(score2)
-    score3 = [property_scores((testset[i][0],prop3)) for i in range(len(testset))]
+    if prop3 is not None:
+        score3 = normalize_scores([property_scores((testset[i][0], prop3)) for i in range(len(testset))])
+    else:
+        score3 = np.zeros(len(testset)) 
     score3 = normalize_scores(score3)
     total_score = score1*w1+score2*w2+score3*w3 
     sorted_indices = np.argsort(total_score) 
