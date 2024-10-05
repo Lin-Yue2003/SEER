@@ -312,7 +312,7 @@ def classify_dataset(args, trainset, testset,prop1, w1=1.0, prop2 = None, w2 = 0
         prop_num+=1
     if prop3 != None:
         prop_num+=1
-
+    print(trainset[0].image.shape)
     score1 = [property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop1) for images, _ in trainset]
     score1 = normalize_scores(score1)
     if prop2 is not None:
@@ -342,6 +342,7 @@ def classify_dataset(args, trainset, testset,prop1, w1=1.0, prop2 = None, w2 = 0
     else:
         score3 = np.zeros(len(testset)) 
     score3 = normalize_scores(score3)
+    
     total_score = score1*w1+score2*w2+score3*w3 
     sorted_indices = np.argsort(total_score) 
 
