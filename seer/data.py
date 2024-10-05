@@ -300,7 +300,8 @@ def datasets_Cifar10():
     testset = torchvision.datasets.CIFAR10(root='../data', train=False, download=True, transform=transform_test)
 
     return trainset,testset
-def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, w2 = 0.0, prop3 = None, w3 = 0.0):
+def classify_dataset(args, trainset, testset,prop1, w1=1.0, prop2 = None, w2 = 0.0, prop3 = None, w3 = 0.0):
+    batch_size = args.batch_size_train[0] + args.batch_size_train[1]
     prop_set = ['bright','dark','red','green','blue','hedge','vedge','vedge+green','red+car','rand_conv']
     assert(w1+w2+w3 == 1), "The sum of weights is not equal 1." 
     prop_num = 1
@@ -312,15 +313,15 @@ def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, 
     if prop3 != None:
         prop_num+=1
 
-    score1 = [property_scores((trainset[i][0],prop1)) for i in range(len(trainset))]
+    score1 = [property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop1) for images, _ in trainset]
     score1 = normalize_scores(score1)
     if prop2 is not None:
-        score2 = normalize_scores([property_scores((trainset[i][0], prop2)) for i in range(len(trainset))])
+        score2 = normalize_scores([property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop2) for images, _ in trainset])
     else:
         score2 = np.zeros(len(trainset)) 
     score2 = normalize_scores(score2)
     if prop3 is not None:
-        score3 = normalize_scores([property_scores((trainset[i][0], prop3)) for i in range(len(trainset))])
+        score3 = normalize_scores([property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop3) for images, _ in trainset])
     else:
         score3 = np.zeros(len(trainset)) 
     score3 = normalize_scores(score3)
@@ -329,15 +330,15 @@ def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, 
 
     sorted_trainset = [trainset[i] for i in sorted_indices]
 
-    score1 = [property_scores((testset[i][0],prop1)) for i in range(len(testset))]
+    score1 = [property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop1) for images, _ in testset]
     score1 = normalize_scores(score1)
     if prop2 is not None:
-        score2 = normalize_scores([property_scores((testset[i][0], prop2)) for i in range(len(testset))])
+        score2 = normalize_scores([property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop2) for images, _ in testset])
     else:
         score2 = np.zeros(len(testset)) 
     score2 = normalize_scores(score2)
     if prop3 is not None:
-        score3 = normalize_scores([property_scores((testset[i][0], prop3)) for i in range(len(testset))])
+        score3 = normalize_scores([property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop3) for images, _ in testset])
     else:
         score3 = np.zeros(len(testset)) 
     score3 = normalize_scores(score3)
