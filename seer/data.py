@@ -314,8 +314,9 @@ def classify_dataset(args, trainset, testset,prop1, w1=1.0, prop2 = None, w2 = 0
         prop_num+=1
     image, label = trainset[0]
     print(image.shape)
-    score1 = [property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop1) for images, _ in trainset]
+    score1 = [property_scores(images, prop=prop1) for images, _ in trainset]
     score1 = normalize_scores(score1)
+    
     if prop2 is not None:
         score2 = normalize_scores([property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop2) for images, _ in trainset])
     else:
