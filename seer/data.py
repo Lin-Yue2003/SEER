@@ -9,6 +9,7 @@ import torchvision.transforms as transforms
 from torchvision import datasets
 from torchvision.transforms import ToTensor
 from copy import copy
+from utils import *
 
 import numpy as np
 
@@ -53,12 +54,12 @@ def get_loader(train_data, test_data, batch_size, num_workers=8):
     loaders = {
         'train' : torch.utils.data.DataLoader(train_data, 
                           batch_size=batch_size, 
-                          shuffle=True, 
+                          shuffle=False, 
                           num_workers=num_workers),
         
         'test'  : torch.utils.data.DataLoader(test_data, 
                           batch_size=batch_size, 
-                          shuffle=True, 
+                          shuffle=False, 
                           num_workers=num_workers),
     }
     return loaders['train'],loaders['test']
@@ -298,5 +299,32 @@ def datasets_Cifar10():
     trainset = torchvision.datasets.CIFAR10(root='../data', train=True, download=True, transform=transform_train)
     testset = torchvision.datasets.CIFAR10(root='../data', train=False, download=True, transform=transform_test)
 
+    return trainset,testset
+def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, w2 = 0.0, prop3 = None, w3 = 0.0):
+    prop_set = ['bright','dark','red','green','blue','hedge','vedge','vedge+green','red+car','rand_conv']
+    assert(w1+w2+w3 != 1), "The sum of weights is not equal 1." 
+    prop_num = 1
+    assert(prop1 != None and prop1 not in prop_set), "prop1 is not in the property set"
+    assert(prop2 != None and prop2 not in prop_set), "prop2 is not in the property set"
+    assert(prop3 != None and prop3 not in prop_set), "prop3 is not in the property set"
+    if prop2 != None:
+        prop_num+=1
+    if prop3 != None:
+        prop_num+=1
+
+    score1 = [property_scores((trainset[i][0],prop1)) for i in range(len(trainset))]
+    score1 = normalize_scores(score1)
+    score2 = [property_scores((trainset[i][0],prop2)) for i in range(len(trainset))]
+    score2 = normalize_scores(score2)
+    score3 = [property_scores((trainset[i][0],prop3)) for i in range(len(trainset))]
+    score3 = normalize_scores(score3)
+    total_score = score1*w1+score2*w2+score3*w3 
+    sorted_indices = np.argsort(total_score) 
+
+    sorted_trainset = [trainset[i] for i in sorted_indices]
+    batch_num = len(trainset)/batch_size
+    if (len(trainset)%batch_size != 0):
+        batch_num+=1
+    
     return trainset,testset
 

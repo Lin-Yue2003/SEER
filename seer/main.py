@@ -31,6 +31,9 @@ if (args.prop_mode == 'thresh') and (args.thresh is None) and (args.task!="secag
     args.thresh=distr.compute_thresh(dataset=trainset,prop=args.prop,batch_size=(args.batch_size_train[0] + args.batch_size_train[1]),num_clients=args.num_clients,num_samples=args.est_thr,bn=distr.batch_norm)
     print(f"THRESHOLD for (trainset={args.dataset},prop={args.prop},batch_size={(args.batch_size_train[0] + args.batch_size_train[1])},num_clients={args.num_clients}): ",args.thresh)
 
+#modify
+classify_dataset(trainset, testset, (args.batch_size_train[0] + args.batch_size_train[1]),'bright', w1=0.6, prop2 = 'red', w2 = 0.4)
+
 
 if args.checkpoint:
     checkpoint = torch.load(args.checkpoint, map_location=torch.device('cpu'))

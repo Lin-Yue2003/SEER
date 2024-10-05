@@ -527,4 +527,12 @@ def property_scores(datapoints,prop,labels=None):
         weight -= weight.mean()
         convolved=torch.nn.functional.conv2d(datapoints, weight, bias=None, stride=1, padding=0, dilation=1, groups=1)
         scores = convolved.mean((1,2,3))
+    elif prop == None:
+        scores = 0.0
+
     return scores
+def normalize_scores(all_scores):
+    min_score = all_scores.min()
+    max_score = all_scores.max()
+    normalized_scores = (all_scores - min_score) / (max_score - min_score + 1e-8)
+    return normalized_scores
