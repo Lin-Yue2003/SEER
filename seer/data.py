@@ -322,9 +322,22 @@ def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, 
     sorted_indices = np.argsort(total_score) 
 
     sorted_trainset = [trainset[i] for i in sorted_indices]
+
+    score1 = [property_scores((testset[i][0],prop1)) for i in range(len(testset))]
+    score1 = normalize_scores(score1)
+    score2 = [property_scores((testset[i][0],prop2)) for i in range(len(testset))]
+    score2 = normalize_scores(score2)
+    score3 = [property_scores((testset[i][0],prop3)) for i in range(len(testset))]
+    score3 = normalize_scores(score3)
+    total_score = score1*w1+score2*w2+score3*w3 
+    sorted_indices = np.argsort(total_score) 
+
+    sorted_testset = [testset[i] for i in sorted_indices]
+
+
     batch_num = len(trainset)/batch_size
     if (len(trainset)%batch_size != 0):
         batch_num+=1
     
-    return trainset,testset
+    return sorted_trainset,sorted_testset
 
