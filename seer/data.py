@@ -304,9 +304,9 @@ def classify_dataset(trainset, testset, batch_size,prop1, w1=1.0, prop2 = None, 
     prop_set = ['bright','dark','red','green','blue','hedge','vedge','vedge+green','red+car','rand_conv']
     assert(w1+w2+w3 == 1), "The sum of weights is not equal 1." 
     prop_num = 1
-    assert(prop1 != None and prop1 in prop_set), "prop1 is not in the property set"
-    assert(prop2 != None and prop2 in prop_set), "prop2 is not in the property set"
-    assert(prop3 != None and prop3 in prop_set), "prop3 is not in the property set"
+    assert(prop1 == None or prop1 in prop_set), "prop1 is not in the property set"
+    assert(prop2 == None or prop2 in prop_set), "prop2 is not in the property set"
+    assert(prop3 == None or prop3 in prop_set), "prop3 is not in the property set"
     if prop2 != None:
         prop_num+=1
     if prop3 != None:
