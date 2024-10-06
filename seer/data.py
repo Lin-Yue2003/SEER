@@ -334,7 +334,7 @@ def classify_dataset(args, trainset, testset,prop1, w1=1.0, prop2 = None, w2 = 0
         score3 = np.zeros(len(trainset)) 
     score3 = normalize_scores(score3)
 
-    total_score = []
+    total_score = [0] * len(trainset)
 
     print("trainset len = ", len(trainset))
     print("datapoints len = ", len(datapoints))
@@ -366,7 +366,7 @@ def classify_dataset(args, trainset, testset,prop1, w1=1.0, prop2 = None, w2 = 0
         score3 = np.zeros(len(testset)) 
     score3 = normalize_scores(score3)
 
-    total_score = []
+    total_score = [0] * len(trainset)
     for i in range(len(datapoints)):
         total_score[i] = score1[i]*w1+score2[i]*w2+score3[i]*w3 
     sorted_indices = np.argsort(total_score) 
