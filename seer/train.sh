@@ -12,10 +12,10 @@ python3 main.py \
 --res_path ../models \
 --attack_cfg modern \
 --print_interval 3 \
---num_epochs 100 \
+--num_epochs 1000 \
 --epoch_steps 1000 \
---test_interval 20 \
---big_test_interval 100 \
+--test_interval 100 \
+--big_test_interval 200 \
 --act ReLU \
 --public_labels True \
 --par_sel_size 8400 \
