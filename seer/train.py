@@ -66,6 +66,8 @@ def train(args, modules, optimizer, trainset, testset, checkpoint=None):
         i=0
         ldrlen=len(loader_train)
         for j, (images, labels) in enumerate(loader_train):
+            #modify
+            print(images[0].shape)
             if j>args.epoch_steps:
                 break
             flt=0
