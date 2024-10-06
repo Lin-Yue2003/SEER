@@ -13,6 +13,33 @@ import warnings
 
 warnings.filterwarnings("ignore", "(Possibly )?corrupt EXIF data", UserWarning)
 
+from torch.utils.data import Sampler
+import random
+
+class CustomSampler(Sampler):
+    def __init__(self, data_source, batch_size):
+        self.data_source = data_source
+        self.batch_size = batch_size
+        self.batched_indices = self._sort_and_batch_by_brightness()
+
+    def _sort_and_batch_by_brightness(self):
+        # Calculate the mean brightness for each image
+        brightness = [data.mean((0, 1, 2)) for data, _ in self.data_source]
+        sorted_indices = sorted(range(len(brightness)), key=lambda i: brightness[i])
+        batched_indices = [sorted_indices[i:i + self.batch_size] for i in range(0, len(sorted_indices), self.batch_size)]
+        random.seed(1337)
+        random.shuffle(batched_indices)
+        return batched_indices
+
+    def __iter__(self):
+        flattened_indices = [idx for batch in self.batched_indices for idx in batch]
+        return iter(flattened_indices)
+
+    def __len__(self):
+        return len(self.data_source)
+
+
+
 
 def construct_dataloader(cfg_data, cfg_impl, user_idx=0, return_full_dataset=False):
     """Return a dataloader with given dataset for the given user_idx.
@@ -52,11 +79,13 @@ def construct_dataloader(cfg_data, cfg_impl, user_idx=0, return_full_dataset=Fal
         )
     else:
         num_workers = 0
-
+    data_sampler = torch.utils.data.CustomSampler(dataset,min(cfg_data.batch_size, len(dataset)))
+    """
     if cfg_impl.shuffle:
         data_sampler = torch.utils.data.RandomSampler(dataset, replacement=cfg_impl.sample_with_replacement)
     else:
         data_sampler = torch.utils.data.SequentialSampler(dataset)
+    """
     dataloader = torch.utils.data.DataLoader(
         dataset,
         batch_size=min(cfg_data.batch_size, len(dataset)),
