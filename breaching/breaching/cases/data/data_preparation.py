@@ -79,7 +79,7 @@ def construct_dataloader(cfg_data, cfg_impl, user_idx=0, return_full_dataset=Fal
         )
     else:
         num_workers = 0
-    data_sampler = torch.utils.data.CustomSampler(dataset,min(cfg_data.batch_size, len(dataset)))
+    data_sampler = CustomSampler(dataset,min(cfg_data.batch_size, len(dataset)))
     """
     if cfg_impl.shuffle:
         data_sampler = torch.utils.data.RandomSampler(dataset, replacement=cfg_impl.sample_with_replacement)
