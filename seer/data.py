@@ -334,10 +334,9 @@ def classify_dataset(args, trainset, testset,prop1, w1=1.0, prop2 = None, w2 = 0
         score3 = np.zeros(len(trainset)) 
     score3 = normalize_scores(score3)
 
-    score1 = np.array(score1)
-    score2 = np.array(score2)
-    score3 = np.array(score3)
-    total_score = score1*w1+score2*w2+score3*w3 
+    total_score = []
+    for i in trainset:
+        total_score[i] = score1[i]*w1+score2[i]*w2+score3[i]*w3 
     sorted_indices = np.argsort(total_score) 
     sorted_trainset = [trainset[i] for i in sorted_indices]
 
@@ -360,11 +359,10 @@ def classify_dataset(args, trainset, testset,prop1, w1=1.0, prop2 = None, w2 = 0
     else:
         score3 = np.zeros(len(testset)) 
     score3 = normalize_scores(score3)
-    
-    score1 = np.array(score1)
-    score2 = np.array(score2)
-    score3 = np.array(score3)
-    total_score = score1*w1+score2*w2+score3*w3 
+
+    total_score = []
+    for i in trainset:
+        total_score[i] = score1[i]*w1+score2[i]*w2+score3[i]*w3 
     sorted_indices = np.argsort(total_score) 
     sorted_testset = [testset[i] for i in sorted_indices]
 
