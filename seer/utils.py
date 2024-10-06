@@ -532,7 +532,7 @@ def property_scores(datapoints,prop,labels=None):
 
     return scores
 def normalize_scores(all_scores):
-    min_score = all_scores.min()
-    max_score = all_scores.max()
+    min_score = min(all_scores)
+    max_score = max(all_scores)
     normalized_scores = (all_scores - min_score) / (max_score - min_score + 1e-8)
     return normalized_scores
