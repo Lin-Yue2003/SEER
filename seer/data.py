@@ -312,42 +312,54 @@ def classify_dataset(args, trainset, testset,prop1, w1=1.0, prop2 = None, w2 = 0
         prop_num+=1
     if prop3 != None:
         prop_num+=1
-    image, label = trainset[0]
-    print(image.shape)
-    score1 = [property_scores(images, prop=prop1) for images, _ in trainset]
+    datapoints = [trainset[i][0].unsqueeze(0) for i in range(len(trainset))]
+    score1 = []
+    score2 = []
+    score3 = []
+    for datapoint in datapoints:
+        score1.append(property_scores(datapoint, prop1))
+
     score1 = normalize_scores(score1)
     
     if prop2 is not None:
-        score2 = normalize_scores([property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop2) for images, _ in trainset])
+        for datapoint in datapoints:
+            score2.append(property_scores(datapoint, prop2))
     else:
         score2 = np.zeros(len(trainset)) 
     score2 = normalize_scores(score2)
     if prop3 is not None:
-        score3 = normalize_scores([property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop3) for images, _ in trainset])
+        for datapoint in datapoints:
+            score3.append(property_scores(datapoint, prop3))
     else:
         score3 = np.zeros(len(trainset)) 
     score3 = normalize_scores(score3)
+
+    score1 = []
+    score2 = []
+    score3 = []
     total_score = score1*w1+score2*w2+score3*w3 
     sorted_indices = np.argsort(total_score) 
-
     sorted_trainset = [trainset[i] for i in sorted_indices]
 
-    score1 = [property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop1) for images, _ in testset]
+    datapoints = [trainset[i][0].unsqueeze(0) for i in range(len(testset))]
+    for datapoint in datapoints:
+        score1.append(property_scores(datapoint, prop1))
     score1 = normalize_scores(score1)
     if prop2 is not None:
-        score2 = normalize_scores([property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop2) for images, _ in testset])
+        for datapoint in datapoints:
+            score2.append(property_scores(datapoint, prop2))
     else:
         score2 = np.zeros(len(testset)) 
     score2 = normalize_scores(score2)
     if prop3 is not None:
-        score3 = normalize_scores([property_scores(images.flatten(start_dim=0, end_dim=-1).to(args.device), prop=prop3) for images, _ in testset])
+        for datapoint in datapoints:
+            score3.append(property_scores(datapoint, prop3))
     else:
         score3 = np.zeros(len(testset)) 
     score3 = normalize_scores(score3)
     
     total_score = score1*w1+score2*w2+score3*w3 
     sorted_indices = np.argsort(total_score) 
-
     sorted_testset = [testset[i] for i in sorted_indices]
 
 
