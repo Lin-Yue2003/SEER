@@ -102,9 +102,7 @@ def estimate_cdf(dataset, prop, feature, batch_size, num_samples,bn):
 
 def opt_thresh(cdf1, cdf2, num_clients):
     # th argmax -(1-cdf1(th))*(cdf1(th)**(num_clients-1))
-    cdf1_val = cdf1(th)
-    cdf2_val = cdf2(th)
-    print(f"th: {th}, cdf1: {cdf1_val}, cdf2: {cdf2_val}")    
+    print(f"cdf1: {cdf1}, cdf2: {cdf2}")    
     def obj(th):
         return -(1-cdf1(th))*cdf2(th)*(cdf1(th)**(num_clients-1))
     from scipy import optimize
