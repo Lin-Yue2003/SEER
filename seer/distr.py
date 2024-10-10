@@ -102,20 +102,10 @@ def estimate_cdf(dataset, prop, feature, batch_size, num_samples,bn):
 
 def opt_thresh(cdf1, cdf2, num_clients):
     # th argmax -(1-cdf1(th))*(cdf1(th)**(num_clients-1)) 
-    """def obj(th):
+    def obj(th):
         return -(1-cdf1(th))*cdf2(th)*(cdf1(th)**(num_clients-1))
     from scipy import optimize
-    argmin_th=optimize.golden(obj,brack=(0,6))
-    return argmin_th
-    """
-    def obj(th):
-        cdf1_val = cdf1(th)
-        cdf2_val = cdf2(th)
-        print(f"th: {th}, cdf1: {cdf1_val}, cdf2: {cdf2_val}")
-        print(-(1 - cdf1_val) * cdf2_val * (cdf1_val**(num_clients - 1)))
-        return -(1 - cdf1_val) * cdf2_val * (cdf1_val**(num_clients - 1))
-    from scipy import optimize
-    argmin_th=optimize.golden(obj,brack=(0,6))
+    argmin_th=optimize.golden(obj)
     return argmin_th
 
 
