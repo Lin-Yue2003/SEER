@@ -101,13 +101,27 @@ def estimate_cdf(dataset, prop, feature, batch_size, num_samples,bn):
     return cdf
 
 def opt_thresh(cdf1, cdf2, num_clients):
-    # th argmax -(1-cdf1(th))*(cdf1(th)**(num_clients-1))
-    print(f"cdf1: {cdf1}, cdf2: {cdf2}")    
-    def obj(th):
+    # th argmax -(1-cdf1(th))*(cdf1(th)**(num_clients-1)) 
+    """def obj(th):
         return -(1-cdf1(th))*cdf2(th)*(cdf1(th)**(num_clients-1))
     from scipy import optimize
     argmin_th=optimize.golden(obj,brack=(0,6))
     return argmin_th
+    """
+    def obj(th):
+        cdf1_val = cdf1(th)
+        cdf2_val = cdf2(th)
+        print(f"th: {th}, cdf1: {cdf1_val}, cdf2: {cdf2_val}")
+        
+        # 確保 cdf1 和 cdf2 都在合理的範圍內
+        if np.isnan(cdf1_val) or np.isnan(cdf2_val) or cdf1_val < 0 or cdf2_val < 0:
+            print(f"Invalid values at th={th}")
+            return np.inf  # 返回一個大值讓優化忽略這個範圍
+        return -(1 - cdf1_val) * cdf2_val * (cdf1_val**(num_clients - 1))
+    from scipy import optimize
+    argmin_th=optimize.golden(obj,brack=(0,6))
+    return argmin_th
+
 
 def compute_thresh(dataset,prop,batch_size,num_clients,num_samples,bn):
     def feat1(scores):
