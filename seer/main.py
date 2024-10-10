@@ -8,7 +8,7 @@ from model import *
 args = get_args()
 torch.manual_seed(args.rng_seed)
 torch.set_default_dtype(torch.float32)
-
+print(f"args.client={args.clients}")
 
 # CIFAR/TinyImageNet first layer
 # https://github.com/Westlake-AI/openmixup/blob/main/openmixup/models/backbones/resnet_mmcls.py#L716
